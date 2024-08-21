@@ -1,7 +1,7 @@
 // import { PhotoIcon, UserCircleIcon } from '@heroicons/react/24/solid'
 
 import { CreateEventForm, CreateEventFormValues } from "@/features/create-event/ui/form";
-import { trpc } from "@/shared";
+import { trpc } from "@/shared/api";
 
 
 
