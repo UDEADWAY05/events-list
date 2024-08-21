@@ -1,17 +1,19 @@
 import Image from "next/image";
 import Link from "next/link";
 import comp from "@/assets/img/comp.jpg"
+import { ReactNode } from "react";
 
 type EventCardProps = {
     id: number;
     title: string;
     description: string | null;
     data: Date;
+    action: ReactNode;
 }
 
-export const EventCard = ({ id, title, description, data }: EventCardProps) => {
+export const EventCard = ({ id, title, description, data, action }: EventCardProps) => {
     return (
-        <div className="flex  font-sans w-full rounded-md max-w-[600px] bg-white">
+        <div className="flex m-2 shadow-lg font-sans w-[600px] rounded-md bg-white">
             <div className="flex-none w-40 relative rounded-s-md">
                 <Image
                     src={comp}
@@ -35,9 +37,7 @@ export const EventCard = ({ id, title, description, data }: EventCardProps) => {
                 </div>
                 <div className="flex space-x-4 mt-6 text-sm font-medium">
                     <div className="flex-auto flex space-x-4">
-                        <Link href={`/events/${id}`} className="h-10 flex items-center justify-center px-6 font-semibold rounded-md bg-black text-white" type="submit">
-                            Присоединится
-                        </Link>
+                        {action}
                         <Link href={`/events/${id}`} className="h-10 flex items-center justify-center px-6 font-semibold rounded-md border border-slate-200 text-slate-900" type="button">
                             Подробнее
                         </Link>
