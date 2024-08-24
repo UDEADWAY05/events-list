@@ -1,4 +1,4 @@
-import { CreateEventSchema, JoinEventSchema } from '@/shared/schema';
+import { CreateEventSchema, JoinEventSchema } from '@/shared/api/schema';
 import { prisma } from '../db';
 import { isAuth, procedure, router } from '../trpc';
 import { z } from 'zod';
@@ -6,6 +6,22 @@ import { z } from 'zod';
 export const eventRouter = router({
     findMany: procedure.query(() => {
         return prisma.event.findMany();
+    }),
+    findUnique: procedure.input(
+        z.object({
+            id: z.number(),
+        })
+    ).query(({ input }) => {
+        return prisma.event.findUnique({
+            where: input,
+            include: {
+                participations: {
+                    include: {
+                        user: true,
+                    }
+                }
+            }
+        })
     }),
     create: procedure
         .input(CreateEventSchema)
