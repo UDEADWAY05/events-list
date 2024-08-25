@@ -1,23 +1,31 @@
 import { FC } from "react";
 import { useForm } from "react-hook-form";
-import { CreateEventSchema } from "@/shared/api/schema";
+import { CreateEventSchema, EditEventSchema } from "@/shared/api/schema";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
 
-export type CreateEventFormValues = z.infer<typeof CreateEventSchema>
+export type EditEventFormValues = z.infer<typeof CreateEventSchema>
 
-type CreateEventFormProps = {
-    onSubmit: (data: CreateEventFormValues) => void;
+type EditEventFormProps = {
+    onSubmit: (data: EditEventFormValues) => void;
+    title: string,
+    description: string | null,
+    data: Date,
 }
 
-export const CreateEventForm: FC<CreateEventFormProps> = ({ onSubmit }) => {
+export const EditEventForm: FC<EditEventFormProps> = ({ onSubmit, title, description, data }) => {
     const {
         register,
         handleSubmit,
         formState: { errors },
-    } = useForm<CreateEventFormValues>({
-        resolver: zodResolver(CreateEventSchema)
+    } = useForm<EditEventFormValues>({
+        resolver: zodResolver(EditEventSchema),
+        defaultValues: {
+            title,
+            description: description || undefined,
+            data
+        }
     })
 
 
@@ -75,6 +83,7 @@ export const CreateEventForm: FC<CreateEventFormProps> = ({ onSubmit }) => {
                                 type="date"
                                 className="block rounded-md border-0 px-4 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-600 focus-within:ring-offset-2 hover:text-indigo-500"
                                 {...register("data")}
+                                value={data.toISOString().split('T')[0]}
                             />
                         </div>
                     </div>
@@ -89,7 +98,7 @@ export const CreateEventForm: FC<CreateEventFormProps> = ({ onSubmit }) => {
                 type="submit"
                 className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
             >
-                Создать
+                Обновить
             </button>
         </div>
     </form>

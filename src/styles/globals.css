@@ -19,7 +19,7 @@
 body {
     color: rgb(var(--foreground-rgb));
 
-    background: #c5c5c559;
+    /* background: #c5c5c559; */
     /* background: linear-gradient(to bottom,
             transparent,
             rgb(var(--background-end-rgb))) rgb(var(--background-start-rgb)); */

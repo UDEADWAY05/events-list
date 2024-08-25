@@ -1,15 +1,18 @@
 import { RouterOutput } from "@/shared/api"
-import { FC } from "react"
+import { FC, ReactNode } from "react"
 
-type EventDetailProps = NonNullable<RouterOutput["event"]["findUnique"]>
+type EventDetailProps = NonNullable<RouterOutput["event"]["findUnique"]> & {
+    action: ReactNode;
+}
 
-export const EventDetail: FC<EventDetailProps> = ({ title, description, data, participations }) => {
+export const EventDetail: FC<EventDetailProps> = ({ title, description, data, participations, action }) => {
     return (
         <div>
-            <div className="px-4 sm:px-0">
-                <h3 className="text-base font-semibold leading-7 text-gray-900">
+            <div className="px-4 sm:px-0 flex w-full justify-between">
+                <h3 className="text-xl font-semibold leading-7 text-gray-900">
                     Информация о событии
                 </h3>
+                {action}
             </div>
             <div className="mt-6 border-t border-gray-100">
                 <dl className="divide-y divide-gray-100">
