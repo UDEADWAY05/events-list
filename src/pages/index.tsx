@@ -7,13 +7,14 @@ import { JoinEventButton } from "@/features/join-event";
 const inter = Inter({ subsets: ["latin"] });
 
 export default function Home() {
-    const { data } = trpc.event.findMany.useQuery();
+    const { data, refetch } = trpc.event.findMany.useQuery();
     console.log(data)
     return <ul className="max-w-[1280px] flex flex-col  items-center justify-center mt-6 mx-auto">
         {
             data?.map((event) => {
                 return <li key={event.id}>
-                    <EventCard {...event} action={<JoinEventButton eventId={event.id} />} />
+                    <EventCard {...event}
+                        action={!event.isJoinded && <JoinEventButton eventId={event.id} onSuccess={refetch} />} />
                 </li>
             })
         }
