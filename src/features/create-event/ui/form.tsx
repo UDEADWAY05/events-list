@@ -1,6 +1,6 @@
 import { FC } from "react";
 import { useForm } from "react-hook-form";
-import { CreateEventSchema } from "@/shared/schema";
+import { CreateEventSchema } from "@/shared/api/schema";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 
