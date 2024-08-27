@@ -25,7 +25,8 @@ export const isAuth = t.middleware(async (opts) => {
 
 export const isAuthor = t.middleware(async (opts) => {
     const { ctx } = opts;
-    const eventId = opts.input?.id; // Предполагается, что id события передается в контекст
+    const input = opts.input as { id: number };
+    const eventId: number = input?.id; // Предполагается, что id события передается в контекст
 
     if (!ctx.user) {
         throw new TRPCError({ code: 'UNAUTHORIZED' });

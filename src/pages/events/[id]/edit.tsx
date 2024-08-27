@@ -1,5 +1,5 @@
-import { EditEventForm, UpdateEventSchema } from "@/features/edit-event";
-import { trpc } from "@/shared/api";
+import { EditEventForm } from "@/features/edit-event";
+import { CreateEventSchema, trpc } from "@/shared/api";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 
@@ -29,8 +29,7 @@ export default function Edit() {
         return "No data"
     }
 
-    const handleSubmit = (newData: UpdateEventSchema) => {
-        console.log(data.data, newData)
+    const handleSubmit = (newData: CreateEventSchema) => {
         mutate({ ...newData, id: Number(router.query.id) })
     }
 
