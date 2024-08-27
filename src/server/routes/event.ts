@@ -1,6 +1,6 @@
-import { CreateEventSchema, JoinEventSchema } from '@/shared/api/schema';
+import { CreateEventSchema, JoinEventSchema, UpdateEventSchema } from '@/shared/api/schema';
 import { prisma } from '../db';
-import { isAuth, procedure, router } from '../trpc';
+import { isAuth, isAuthor, procedure, router } from '../trpc';
 import { z } from 'zod';
 
 export const eventRouter = router({
@@ -29,6 +29,7 @@ export const eventRouter = router({
                     title: true,
                     description: true,
                     data: true,
+                    authorId: true,
                     participations: {
                         select: {
                             user: {
@@ -57,6 +58,28 @@ export const eventRouter = router({
             data: {
                 eventId: input.id,
                 userId: user.id
+            }
+        })
+    }),
+    leave: procedure.input(JoinEventSchema).use(isAuth).mutation(async ({ input, ctx: { user } }) => {
+        return prisma.participation.deleteMany({
+            where: {
+                eventId: input.id,
+                userId: user.id,
+            }
+        })
+    }),
+    change: procedure.input(UpdateEventSchema).use(isAuthor).mutation(async ({ input, ctx: { user } }) => {
+        console.log(input)
+        return prisma.event.update({
+            where: {
+                id: input.id,
+                authorId: user.id
+            },
+            data: {
+                title: input.title,
+                description: input.description,
+                data: input.data
             }
         })
     })

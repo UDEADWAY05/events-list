@@ -1,34 +1,37 @@
 import { RouterOutput } from "@/shared/api"
-import { FC } from "react"
+import { FC, ReactNode } from "react"
 
-type EventDetailProps = NonNullable<RouterOutput["event"]["findUnique"]>
+type EventDetailProps = NonNullable<RouterOutput["event"]["findUnique"]> & {
+    action: ReactNode;
+}
 
-export const EventDetail: FC<EventDetailProps> = ({ title, description, data, participations }) => {
+export const EventDetail: FC<EventDetailProps> = ({ title, description, data, participations, action }) => {
     return (
         <div>
-            <div className="px-4 sm:px-0">
-                <h3 className="text-base font-semibold leading-7 text-gray-900">
+            <div key="heading" className="px-4 sm:px-0 flex w-full justify-between">
+                <h3 className="text-xl font-semibold leading-7 text-gray-900">
                     Информация о событии
                 </h3>
+                {action}
             </div>
-            <div className="mt-6 border-t border-gray-100">
-                <dl className="divide-y divide-gray-100">
-                    <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-                        <dt className="text-sm font-medium leading-6 text-gray-900">Название</dt>
-                        <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">{title}</dd>
+            <div key="details-body" className="mt-6 border-t border-gray-100">
+                <dl key="fff" className="divide-y divide-gray-100">
+                    <div key="title" className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+                        <dt key="title-text" className="text-sm font-medium leading-6 text-gray-900">Название</dt>
+                        <dd key="title-sub" className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">{title}</dd>
                     </div>
-                    <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-                        <dt className="text-sm font-medium leading-6 text-gray-900">Описание</dt>
-                        <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">{description}</dd>
+                    <div key="describe" className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+                        <dt key="describe-text" className="text-sm font-medium leading-6 text-gray-900">Описание</dt>
+                        <dd key="describe-sub" className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">{description}</dd>
                     </div>
-                    <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-                        <dt className="text-sm font-medium leading-6 text-gray-900">Дата проведения</dt>
-                        <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">{data.toDateString()}</dd>
+                    <div key="date" className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+                        <dt key="date-text" className="text-sm font-medium leading-6 text-gray-900">Дата проведения</dt>
+                        <dd key="date-sub" className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">{data.toDateString()}</dd>
                     </div>
-                    <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-                        <dt className="text-sm font-medium leading-6 text-gray-900">Участники</dt>
-                        <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
-                            {participations.map(({ user }) => <p>{user.name}</p>)}
+                    <div key="participations" className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+                        <dt key="participations-text" className="text-sm font-medium leading-6 text-gray-900">Участники</dt>
+                        <dd key="participations-sub" className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
+                            {participations.map(({ user }) => <p key={user.name}>{user.name}</p>)}
                         </dd>
                     </div>
                 </dl>
