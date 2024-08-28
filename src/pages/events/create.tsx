@@ -1,12 +1,18 @@
 // import { PhotoIcon, UserCircleIcon } from '@heroicons/react/24/solid'
 
 import { CreateEventForm, CreateEventFormValues } from "@/features/create-event/ui/form";
-import { trpc } from "@/shared";
+import { trpc } from "@/shared/api";
+import { useRouter } from "next/router";
 
 
 
 export default function CreateEvent() {
-    const { mutate } = trpc.event.create.useMutation()
+    const router = useRouter()
+    const { mutate } = trpc.event.create.useMutation({
+        onSuccess: (data) => {
+            router.push(`${data.id}`);
+        }
+    });
 
     const handleSubmit = (data: CreateEventFormValues) => {
         mutate(data);

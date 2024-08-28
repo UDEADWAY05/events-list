@@ -1,22 +1,63 @@
+import { CreateEventSchema, JoinEventSchema } from '@/shared/api/schema';
 import { prisma } from '../db';
-import { procedure, router } from '../trpc';
+import { isAuth, procedure, router } from '../trpc';
 import { z } from 'zod';
 
 export const eventRouter = router({
-    findMany: procedure.query(() => {
-        return prisma.event.findMany();
+    findMany: procedure.query(async ({ ctx: { user } }) => {
+        const events = await prisma.event.findMany({
+            include: {
+                participations: true
+            }
+        });
+
+        return events.map(({ participations, ...events }) => ({
+            ...events,
+            isJoinded: participations.some(({ userId }) => userId === user?.id)
+        }));
     }),
-    create: procedure.input(z.object({
-        title: z.string(),
-        descriprion: z.string().optional(),
-        data: z.coerce.date(), // опечатка в слове date
-    })).mutation(async ({ input }) => {
-        const user = await prisma.user.findFirstOrThrow()
-        return prisma.event.create({
+    findUnique: procedure.input(
+        z.object({
+            id: z.number(),
+        })
+    )
+        .use(isAuth)
+        .query(({ input }) => {
+            return prisma.event.findUnique({
+                where: input,
+                select: {
+                    title: true,
+                    description: true,
+                    data: true,
+                    participations: {
+                        select: {
+                            user: {
+                                select: {
+                                    name: true,
+                                }
+                            },
+                        }
+                    }
+                }
+            })
+        }),
+    create: procedure
+        .input(CreateEventSchema)
+        .use(isAuth)
+        .mutation(async ({ input, ctx: { user } }) => {
+            return prisma.event.create({
+                data: {
+                    authorId: user.id,
+                    ...input,
+                },
+            })
+        }),
+    join: procedure.input(JoinEventSchema).use(isAuth).mutation(async ({ input, ctx: { user } }) => {
+        return prisma.participation.create({
             data: {
-                authorId: user.id,
-                ...input,
-            },
+                eventId: input.id,
+                userId: user.id
+            }
         })
     })
-})
+});
